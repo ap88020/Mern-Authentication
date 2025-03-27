@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import connectDB from "./config/mongodb.js";
 import authRouter from './router/authRouter.js'
+import userRouter from "./router/userRouter.js";
 
 const app = express();
 const port = process.env.PORT ||  3000;
@@ -21,6 +22,7 @@ app.get('/',(req,res) => {
 })
 
 app.use('/api/auth' , authRouter);
+app.use('/api/user' , userRouter);
 
 app.listen(port, ()=> {
      console.log(`Server is started is on port : ${port}`);
