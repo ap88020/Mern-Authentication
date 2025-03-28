@@ -124,7 +124,7 @@ export const sendVerifyOtp = async (req,res) => {
         user.verifyOtp = otp;
         user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
 
-        user.save();
+        await user.save();
 
         const mailOption = {
             from : process.env.SENDER_EMAIL,
@@ -142,7 +142,7 @@ export const sendVerifyOtp = async (req,res) => {
 
 }
 
-export const    verifyEmail = async (req,res) => {
+export const  verifyEmail = async (req,res) => {
     const {userId , otp} = req.body;
     
     if(!userId || !otp) {
@@ -150,14 +150,14 @@ export const    verifyEmail = async (req,res) => {
     }
 
     try {
-        const user = await userModel.findById({userId});
+        const user = await userModel.findById(userId);
 
         if(!user){
-            return res.json({success:true , message : "User not found"});
+            return res.json({success:false , message : "User not found"});
         }
 
-        if(user.verifyOtp === '' || !user.verifyOtp !== otp){
-            return res.json({success : true , message : "Invalid OTP"});
+        if(!user.verifyOtp || String(user.verifyOtp) !== String(otp)){
+            return res.json({success : false , message : "Invalid OTP"});
         }
 
         if(user.verifyOtpExpireAt < Date.now()){
@@ -173,7 +173,7 @@ export const    verifyEmail = async (req,res) => {
         return res.json({success : true , message : "Email Verified Successfully"});
         
     } catch (error) {
-        return res.json({success: true, message : error.message});
+        return res.json({success: false, message : error.message});
     }
 }
 
