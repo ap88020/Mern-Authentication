@@ -98,11 +98,10 @@ export const logout = async (req,res) => {
         res.clearCookie("token", {
             httpOnly : true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge : 7 * 24 * 60 * 60 * 1000,           
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',          
         })       
 
-        return res.json({success : false , message : error.message});
+        return res.json({success : true , message : "Logged out Successfully"});
     } catch (error) {
         return res.json({success : false , message : error.message});
     }
@@ -248,3 +247,14 @@ export const resetPassword = async (req,res) => {
         return res.json({success:false , message : error.message});
     }
 }
+
+export const isUserAuthincated = async (req,res) => {
+    try {
+        if(!req.userId){
+            return res.json({success : false , message : "Not Authorized"});
+        }
+        res.json({success:true , user: req.userId});
+    } catch (error) {
+        res.json({success:false , message:error.message});
+    }
+} 
