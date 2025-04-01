@@ -85,6 +85,7 @@ const VerifyEmail = () => {
                 <input
                   key={index}
                   type="text"
+                  maxLength={1}
                   required
                   ref={(el) => (inputRef.current[index] = el)}
                   onInput={(e) => handleInput(e, index)}
